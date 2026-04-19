@@ -43,3 +43,13 @@ button {
   cursor: pointer;
   border-radius: 10px;
 }
+
+.item img {
+  width: 100px;
+  height: 80px;
+}
+
+.item p {
+  font-size: 12px;
+  margin-top: 5px;
+}

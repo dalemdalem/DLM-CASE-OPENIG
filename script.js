@@ -1,13 +1,5 @@
-const skins = [
-  { name: "AK-47 Redline", chance: 60, rarity: "common" },
-  { name: "AWP Asiimov", chance: 25, rarity: "rare" },
-  { name: "M4A1-S Hyper Beast", chance: 10, rarity: "epic" },
-  { name: "Knife 🔥", chance: 5, rarity: "legendary" }
-];
-
 const roller = document.getElementById("roller");
 
-// alegem castigatorul REAL
 function getWinningSkin() {
   const rand = Math.random() * 100;
   let cumulative = 0;
@@ -19,6 +11,33 @@ function getWinningSkin() {
     }
   }
 }
+
+const skins = [
+  {
+    name: "AK-47 Redline",
+    img: "https://via.placeholder.com/100x80?text=AK-47",
+    chance: 60,
+    rarity: "common"
+  },
+  {
+    name: "AWP Asiimov",
+    img: "https://via.placeholder.com/100x80?text=AWP",
+    chance: 25,
+    rarity: "rare"
+  },
+  {
+    name: "M4A1-S Hyper Beast",
+    img: "https://via.placeholder.com/100x80?text=M4A1",
+    chance: 10,
+    rarity: "epic"
+  },
+  {
+    name: "Knife 🔥",
+    img: "https://via.placeholder.com/100x80?text=KNIFE",
+    chance: 5,
+    rarity: "legendary"
+  }
+];
 
 // generam lista DAR fortam castigatorul
 function generateItems(winnerIndex, winnerSkin) {
@@ -35,8 +54,11 @@ function generateItems(winnerIndex, winnerSkin) {
 
     const item = document.createElement("div");
     item.className = "item " + skin.rarity;
-    item.innerText = skin.name;
-
+    item.innerHTML = `
+  <img src="${skin.img}" />
+  <p>${skin.name}</p>
+`;
+    
     roller.appendChild(item);
   }
 }
