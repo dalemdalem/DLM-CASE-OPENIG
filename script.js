@@ -1,89 +1,106 @@
-const roller = document.getElementById("roller");
+window.onload = function () {
 
-function getWinningSkin() {
-  const rand = Math.random() * 100;
-  let cumulative = 0;
+  const skins = [
+    { name: "AK-47 Redline", img: "https://picsum.photos/100/80?random=1", chance: 60, rarity: "common" },
+    { name: "AWP Asiimov", img: "https://picsum.photos/100/80?random=2", chance: 25, rarity: "rare" },
+    { name: "M4A1-S Hyper Beast", img: "https://picsum.photos/100/80?random=3", chance: 10, rarity: "epic" },
+    { name: "Knife 🔥", img: "https://picsum.photos/100/80?random=4", chance: 5, rarity: "legendary" }
+  ];
 
-  for (let skin of skins) {
-    cumulative += skin.chance;
-    if (rand <= cumulative) {
-      return skin;
+  const roller = document.getElementById("roller");
+  const caseBox = document.getElementById("caseBox");
+
+  function getWinningSkin() {
+    let rand = Math.random() * 100;
+    let cumulative = 0;
+
+    for (let i = 0; i < skins.length; i++) {
+      cumulative += skins[i].chance;
+      if (rand <= cumulative) {
+        return skins[i];
+      }
     }
   }
-}
 
-const skins = [
-  {
-    name: "AK-47 Redline",
-    img: "https://via.placeholder.com/100x80?text=AK-47",
-    chance: 60,
-    rarity: "common"
-  },
-  {
-    name: "AWP Asiimov",
-    img: "https://via.placeholder.com/100x80?text=AWP",
-    chance: 25,
-    rarity: "rare"
-  },
-  {
-    name: "M4A1-S Hyper Beast",
-    img: "https://via.placeholder.com/100x80?text=M4A1",
-    chance: 10,
-    rarity: "epic"
-  },
-  {
-    name: "Knife 🔥",
-    img: "https://via.placeholder.com/100x80?text=KNIFE",
-    chance: 5,
-    rarity: "legendary"
-  }
-];
+  function generateItems(winnerIndex, winnerSkin) {
+    roller.innerHTML = "";
 
-// generam lista DAR fortam castigatorul
-function generateItems(winnerIndex, winnerSkin) {
-  roller.innerHTML = "";
+    for (let i = 0; i < 40; i++) {
+      let skin;
 
-  for (let i = 0; i < 40; i++) {
-    let skin;
+      if (i === winnerIndex) {
+        skin = winnerSkin;
+      } else {
+        skin = skins[Math.floor(Math.random() * skins.length)];
+      }
 
-    if (i === winnerIndex) {
-      skin = winnerSkin; // FORȚĂM câștigul
-    } else {
-      skin = skins[Math.floor(Math.random() * skins.length)];
+      let item = document.createElement("div");
+      item.className = "item " + skin.rarity;
+
+     item.innerHTML = "<img src='" + skin.img + "'><p>" + skin.name + "</p><span>" + skin.chance + "%</span>";
+
+      roller.appendChild(item);
     }
+  }
 
-    const item = document.createElement("div");
-    item.className = "item " + skin.rarity;
-    item.innerHTML = `
-  <img src="${skin.img}" />
-  <p>${skin.name}</p>
-`;
+  function openCase() {
+
+    let winner = getWinningSkin();
+    let winnerIndex = Math.floor(Math.random() * 10) + 20;
+
+    generateItems(winnerIndex, winner);
+
     
-    roller.appendChild(item);
+	
+let item = document.querySelector(".item");
+let itemWidth = item.offsetWidth + 20; // 20 = margin (10 + 10)
+let offset = winnerIndex * itemWidth;
+    setTimeout(function () {
+      roller.style.transition = "transform 4s ease";
+      roller.style.transform = "translateX(-" + offset + "px)";
+    }, 50);
+
+   setTimeout(function () {
+
+  const items = document.querySelectorAll(".item");
+  const caseRect = document.querySelector(".case").getBoundingClientRect();
+  const center = caseRect.left + caseRect.width / 2;
+
+  let closestItem = null;
+  let closestDistance = Infinity;
+
+  items.forEach(item => {
+    const rect = item.getBoundingClientRect();
+    const itemCenter = rect.left + rect.width / 2;
+
+    const distance = Math.abs(center - itemCenter);
+
+    if (distance < closestDistance) {
+      closestDistance = distance;
+      closestItem = item;
+    }
+  });
+
+  alert("Ai castigat: " + closestItem.innerText);
+
+}, 4200);
   }
-}
 
-function openCase() {
-  const winner = getWinningSkin();
+  caseBox.addEventListener("click", openCase);
 
-  const winnerIndex = Math.floor(Math.random() * 10) + 20;
+  function showPreview() {
+    let preview = document.getElementById("preview");
 
-  generateItems(winnerIndex, winner);
+    for (let i = 0; i < skins.length; i++) {
+      let item = document.createElement("div");
+      item.className = "item " + skins[i].rarity;
 
-  const offset = winnerIndex * 130;
+      item.innerHTML = "<img src='" + skins[i].img + "'><p>" + skins[i].name + "</p>";
 
-  roller.style.transition = "none";
-  roller.style.transform = "translateX(0px)";
+      preview.appendChild(item);
+    }
+  }
 
-  setTimeout(() => {
-    roller.style.transition = "transform 4s cubic-bezier(0.1, 0.7, 0.1, 1)";
-    roller.style.transform = `translateX(-${offset}px)`;
-  }, 50);
+  showPreview();
 
-  // afisam rezultatul dupa animatie
-  setTimeout(() => {
-    alert("Ai castigat: " + winner.name);
-  }, 4200);
-}
-
-roller.style.transition = "transform 5s cubic-bezier(0.08, 0.6, 0.2, 1)";
+};
